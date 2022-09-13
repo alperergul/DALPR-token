@@ -1,5 +1,6 @@
 # https://jc65f-zaaaa-aaaam-qa2ka-cai.ic0.app/
 <hr>
+
 # Check your Balance
 
 1. Find out your principal id:
