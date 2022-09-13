@@ -1,15 +1,24 @@
 import React, { useState } from "react";
-import { token } from "../../../declarations/token";
+import { AuthClient } from "../../../../node_modules/@dfinity/auth-client/lib/cjs/index";
+import { canisterId, createActor } from "../../../declarations/token";
 
-function Faucet() {
+function Faucet(props) {
   const [isDisabled, setIsDisabler] = useState(false);
   const [buttonText, setButtonText] = useState("Gimme gimme");
 
   async function handleClick(event) {
     setIsDisabler(true);
-    const result = await token.payOut();
+
+    const authClient = await AuthClient.create();
+    const identity = await authClient.getIdentity();
+    console.log(identity);
+
+    const authenticatedCanister = createActor(canisterId, {
+      agentOptions: { identity },
+    });
+
+    const result = await authenticatedCanister.payOut();
     setButtonText(result);
-    // setIsDisabler(false);
   }
 
   return (
@@ -21,8 +30,8 @@ function Faucet() {
         Faucet
       </h2>
       <label>
-        Get your free DALPR tokens here! Claim 10,000 DANG coins to your
-        account.
+        Get your free DALPR tokens here! Claim 10,000 DALPR coins to{" "}
+        {props.userPrincipal}.
       </label>
       <p className="trade-buttons">
         <button id="btn-payout" onClick={handleClick} disabled={isDisabled}>
